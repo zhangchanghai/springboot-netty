@@ -1,0 +1,31 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: springboot-test
+  freemarker:
+    # 设置模板后缀名
+    suffix: .html
+    # 设置文档类型
+    content-type: text/html
+    # 设置页面编码格式
+    charset: UTF-8
+    # 设置页面缓存
+    cache: false
+    # 设置ftl文件路径
+    template-loader-path: classpath:/templates
+  # 设置静态文件路径，js,css等
+#  mvc:
+#    static-path-pattern: /static/**
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF8&allowMultiQueries=true
+#    username: root
+#    password: root
+#mybatis:
+#  mapper-locations: classpath:/mapper/*.xml
+#  redis:
+#    host: localhost
+#    port: 6379
+netty:
+  port: 9099    
+    

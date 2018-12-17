@@ -1,0 +1,46 @@
+package com.runlin.netty.heartbeat;
+
+import io.netty.channel.Channel;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.util.AttributeKey;
+
+import java.util.Properties;
+import java.util.TimerTask;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.runlin.netty.util.GlobalUserUtil;
+import com.runlin.util.UrlClient;
+import com.runlin.web.framework.util.Tool;
+
+
+
+public class SocketHeartBeatTask extends TimerTask{
+	
+	
+    @Override	
+    public void run(){
+    	
+    		String msg = "server heartbeat bibibi ......";
+    		
+    		Properties properties = Tool.getProperties("server.properties");
+    		String serverurl = properties.getProperty("web.server.uri");
+	    	//未连接
+	    	UrlClient.urlClient(serverurl + "/offline/connectstate.do",0, "", 0);
+	        			
+	        for (Channel channel : GlobalUserUtil.channels) {
+	        	try {
+		        	String dealercode = String.valueOf(channel.attr(AttributeKey.valueOf("dealercode")).get());
+		        	if(StringUtils.isNotBlank(dealercode)){
+		        		channel.writeAndFlush(new TextWebSocketFrame(msg));
+		        		UrlClient.urlClient(serverurl + "/offline/connectstate.do",1, dealercode, 1);
+		        	}
+	        	} catch (Exception e) {
+	        		
+	        		e.printStackTrace();
+	        		
+	        	}
+	        }
+			
+    }
+}

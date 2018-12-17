@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>netty聊天室</title>
+    <script src="/js/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+ 	我是${user.name!}
+    <div id="top">请等待匹配</div>
+ 	
+    <div id="bottom">
+        <div id="title"></div>
+        <div id = 'users'></div>
+        <div>
+            <input type="text" id="mag"/>
+            <input type="button" value="发送" onclick="send()"/>
+        </div>
+        <div id="sed" style="height: 300px;width: 500px;border:1px solid;"></div>
+    </div>
+</body>
+<script >
+    var user={code:1,name:'A',message:'aaa'};
+    var socket;
+    $(function() {
+      //  $('#bottom').hide();
+        user={code:'${user.code!}',name:'${user.name!}',message:'${user.message!}'};
+        console.log(user);
+        inChat();
+    });
+ 
+    //进入聊天室
+    function inChat() {
+        if (!window.WebSocket) {
+            window.WebSocket = window.MozWebSocket;
+        }
+        if (window.WebSocket) {
+            //获取h5 socket
+            socket = new WebSocket("ws://127.0.0.1:9099/");
+            //接收消息
+            socket.onmessage = function(data){
+                console.log("socket.onmessage:")
+                console.log(data);
+                var mage = JSON.parse(data.data);
+                console.log(mage.message);
+                if(mage.code==0){
+                	 $('#top').text('在线人数:'+mage.message);
+                }else if(mage.code==1){
+                	if(mage.name == user.name){
+                		  $('#sed').append('<span style="color:red;" >'+ mage.name + ' : ' + mage.message + '</span><br/>');
+                	}else{
+	              	  $('#sed').append('<span>'+ mage.name + ' : ' + mage.message + '</span><br/>');
+                	}
+                }else if(mage.code==2){
+               	  $('#sed').append('<span style="color:gray;">'+ mage.name + ' : ' + mage.message + '</span><br/>');
+                }
+                return ;
+            }
+            //webSocket的链接
+            socket.onopen = function(data) {
+               // $('#top').text('链接成功,请等待匹配');
+                console.log("socket.onopen:")
+                user.message = "进入聊天室";
+                //链接成功后发送用户信息进入聊天室
+                socket.send(JSON.stringify(user));
+            }
+            //webSocket关闭
+            socket.onclose = function(data) {
+                console.log("socket.onclose:")
+            }
+            //webSocket错误信息
+            socket.onerror = function(data) {
+                console.log("socket.onerror:")
+                console.log(data);
+            }
+        } else {
+            alert("抱歉，您的浏览器不支持WebSocket协议!");
+        }
+    }
+ 
+    //发送消息
+    function send() {
+        user.message = $('#mag').val();
+        socket.send(JSON.stringify(user));
+    }
+</script>
+</html>
