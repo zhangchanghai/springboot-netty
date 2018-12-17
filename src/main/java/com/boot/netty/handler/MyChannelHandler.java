@@ -180,32 +180,7 @@ public class MyChannelHandler extends SimpleChannelInboundHandler<Object> {
             throw new UnsupportedOperationException("不支持二进制");
         }
         //可以对消息进行处理
-        //	System.out.println(GlobalUserUtil.channels.size());
-        	/*
-            String returnMessage = ((TextWebSocketFrame) msg).text();
-            System.out.println("服务端收到：" + returnMessage);
-            
-            String[] arr = returnMessage.split(";");
-            
-            if(arr.length != 2){
-            	LOGGER.info("fail");
-            }else{
-            	String state = arr[0];
-                String dealerCode = arr[1];
-                
-                ctx.channel().attr(AttributeKey.valueOf("dealercode")).set(dealerCode);
-            	
-                if("1".equals(state)){
-                	//UrlClient.UrlClient("http://10.226.0.147:8080/itsmp/upgrade/upgradeSuccess.do",dealerCode,upgradeId,status);
-                	//UrlClient.UrlClient("http://192.168.203.155:80/itsmp/upgrade/upgradeSuccess.do",dealerCode,upgradeId,status);
-                	LOGGER.info("success");
-                	
-                }else if("2".equals(state)){
-                	//UrlClient.UrlClient("http://10.226.0.147:8080/itsmp/upgrade/upgradeSuccess.do",dealerCode,upgradeId,status);
-                	//UrlClient.UrlClient("http://192.168.203.155:80/itsmp/upgrade/upgradeSuccess.do",dealerCode,upgradeId,status);
-                	LOGGER.info(dealerCode + "\t fail");
-                }
-            }*/
+        
           //群发
         for (Channel channel : GlobalUserUtil.channels) {
            // System.out.println(GlobalUserUtil.channels);
